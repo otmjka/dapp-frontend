@@ -1,24 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import { useQuery, gql } from "@apollo/client";
+
+const CHAINS = gql`
+  query EmapleQuery {
+    chains {
+      total
+      chains {
+        chain_id
+        name
+        description
+      }
+    }
+  }
+`;
 
 function App() {
+  const {
+    loading,
+    error,
+    data: { chains },
+  } = useQuery(CHAINS);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <pre>{JSON.stringify(chains, null, 2)}</pre>
     </div>
   );
 }
